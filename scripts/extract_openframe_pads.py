@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""Extract the caravel openframe pad ring and generate the double-wide project.
+"""Extract the caravel openframe pad ring and generate this harness.
 
 Parses caravel/mag/chip_io_openframe.mag, classifies every functional pad
 (signal gpiov2 pads and power clamp pads) by which die edge it sits on, then
-builds the *double-wide* ring:
-
-  * West (left) and East (right): kept exactly as openframe.
-  * North (top) and South (bottom): duplicated -> two copies side by side, the
-    second copy shifted by +HALF_WIDTH in x (continuous rows, only 4 corners).
+rebuilds that ring. With DOUBLE_WIDE false (this repo) every edge is kept as
+openframe, on the 3588 x 5188 um die. With DOUBLE_WIDE true, north and south
+are duplicated side by side and the east edge moves out by one die width.
 
 From that inventory it generates, so that RTL / pad tables / pin map never drift:
 
@@ -32,8 +30,11 @@ import sys
 UNIT_UM = 0.005            # calibrated: 717600 magic units == 3588 um
 OF_W_UM = 3588.0           # openframe die width
 OF_H_UM = 5188.0           # openframe die height
-HALF_UM = OF_W_UM          # x-offset applied to the second top/bottom copy
-DW_W_UM = 2 * OF_W_UM      # 7176 double-wide width
+# This repo is the standard openframe die. The double-wide harness sets this
+# true: north and south are copied, and the east edge shifts out by OF_W_UM.
+DOUBLE_WIDE = False
+HALF_UM = OF_W_UM if DOUBLE_WIDE else 0.0
+DW_W_UM = (2 * OF_W_UM) if DOUBLE_WIDE else OF_W_UM
 DW_H_UM = OF_H_UM          # 5188 unchanged height
 
 # Openframe user wrapper is 3166.63 x 4766.63 inside the 3588 x 5188 die
@@ -141,7 +142,10 @@ if UID_ROUTE_WINDOW_S_UM[1] >= DW_W_UM - ROUTE_OBS_DEPTH_UM:
 # window stops below the GPIO 0 pad.
 OWIRE_W_UM = 155.0
 OWIRE_H_UM = 240.0
-OWIRE_X_UM = 6999.500
+# Cell's right edge sits 21.5 um inside the east die edge (6999.5 on the
+# 7176 um double-wide die; 3411.5 on the 3588 um openframe die).
+OWIRE_EAST_INSET_UM = 21.5
+OWIRE_X_UM = DW_W_UM - OWIRE_EAST_INSET_UM - OWIRE_W_UM
 OWIRE_Y_UM = 243.500
 OWIRE_ROUTE_WINDOW_E_UM = (230.0, 495.0)
 if not OWIRE_Y_UM > OWIRE_ROUTE_WINDOW_E_UM[0]:
@@ -461,72 +465,64 @@ def build_inventory(uses):
         for o, cb in zip(sig_by_side[s], cb_by_side[s]):
             o.cb = dict(llx=cb["llx"], lly=cb["lly"], orient=cb["orient"])
 
-    # East ring is kept as openframe but shifted to the double-wide east edge;
-    # its constant_blocks move with it (+HALF in x, the perpendicular axis).
-    for o in sig_by_side["E"]:
-        if o.cb:
-            o.cb["llx"] += HALF_UM
+    # Double-wide only: shift the east ring out by one die width, duplicate
+    # north and south, and fill the seam those two copies leave at x=3588.
+    if DOUBLE_WIDE:
+        for o in sig_by_side["E"]:
+            if o.cb:
+                o.cb["llx"] += HALF_UM
 
-    # Reference for synthesizing the mid-seam const blocks (N/S have no openframe
-    # counterpart): fixed perpendicular coord + along-edge delta from pad center.
-    seam_cb = {}
-    for s in "NS":
-        r = sig_by_side[s][0]
-        seam_cb[s] = dict(dalong=r.cb["llx"] - r.coord,
-                          perp=r.cb["lly"], orient=r.cb["orient"], src=r.src,
-                          cell=r.lo - r.coord)
+        # Reference for synthesizing the mid-seam const blocks (N/S have no
+        # openframe counterpart): fixed perpendicular coord + along-edge delta.
+        seam_cb = {}
+        for s in "NS":
+            r = sig_by_side[s][0]
+            seam_cb[s] = dict(dalong=r.cb["llx"] - r.coord,
+                              perp=r.cb["lly"], orient=r.cb["orient"], src=r.src,
+                              cell=r.lo - r.coord)
 
-    # ---- duplicate north/south ------------------------------------------- #
-    def dup(objs, cls_axis_only=False):
-        out = []
-        for o in objs:                      # left copy (original x)
-            out.append(o)
-        for o in objs:                      # right copy (+HALF)
-            if isinstance(o, Signal):
-                n = Signal(o.side, o.domain, o.coord + HALF_UM, src=o.src,
-                           lo=o.lo + HALF_UM)
-                if o.cb:
-                    n.cb = dict(o.cb)
-                    n.cb["llx"] += HALF_UM
-            else:
-                n = Clamp(o.side, o.coord + HALF_UM,
-                          dict(base=o.base, domain=o.domain, pkg=o.pkg,
-                               clamped3=o.clamped3, master=o.master), src=o.src,
-                          lo=o.lo + HALF_UM)
-            out.append(n)
-        out.sort(key=lambda o: o.coord)
-        return out
+        def dup(objs, cls_axis_only=False):
+            out = []
+            for o in objs:                      # left copy (original x)
+                out.append(o)
+            for o in objs:                      # right copy (+HALF)
+                if isinstance(o, Signal):
+                    n = Signal(o.side, o.domain, o.coord + HALF_UM, src=o.src,
+                               lo=o.lo + HALF_UM)
+                    if o.cb:
+                        n.cb = dict(o.cb)
+                        n.cb["llx"] += HALF_UM
+                else:
+                    n = Clamp(o.side, o.coord + HALF_UM,
+                              dict(base=o.base, domain=o.domain, pkg=o.pkg,
+                                   clamped3=o.clamped3, master=o.master), src=o.src,
+                              lo=o.lo + HALF_UM)
+                out.append(n)
+            out.sort(key=lambda o: o.coord)
+            return out
 
-    sig_by_side["N"] = dup(sig_by_side["N"])
-    sig_by_side["S"] = dup(sig_by_side["S"])
-    clp_by_side["N"] = dup(clp_by_side["N"])
-    clp_by_side["S"] = dup(clp_by_side["S"])
+        sig_by_side["N"] = dup(sig_by_side["N"])
+        sig_by_side["S"] = dup(sig_by_side["S"])
+        clp_by_side["N"] = dup(clp_by_side["N"])
+        clp_by_side["S"] = dup(clp_by_side["S"])
 
-    # ---- fill N/S mid-seam with extra GPIOs at the existing pitch -------- #
-    # Duplicating left/right openframe halves leaves an empty seam around
-    # X=3588. Branding moves into left-half gaps; these pads occupy the seam.
-    # North: after left-half gpio @ 3169.977, pitch 257 -> 3426.977, 3683.977
-    # South: after left-half clamp_vdda @ 3151.500, pitch 274 -> 3425.500, 3699.500
-    # A seam pad's constant_block copies the side's reference pad (seam_cb), so
-    # its wrapper pins copy that pad's too.
-    for coord in (3426.977, 3683.977):
-        sig_by_side["N"].append(Signal("N", None, coord, src=seam_cb["N"]["src"],
-                                       lo=float(round(coord + seam_cb["N"]["cell"]))))
-    for coord in (3425.500, 3699.500):
-        sig_by_side["S"].append(Signal("S", None, coord, src=seam_cb["S"]["src"],
-                                       lo=float(round(coord + seam_cb["S"]["cell"]))))
-    sig_by_side["N"].sort(key=lambda o: o.coord)
-    sig_by_side["S"].sort(key=lambda o: o.coord)
+        # North: after left-half gpio @ 3169.977, pitch 257 -> 3426.977, 3683.977
+        # South: after left-half clamp_vdda @ 3151.500, pitch 274 -> 3425.500, 3699.500
+        for coord in (3426.977, 3683.977):
+            sig_by_side["N"].append(Signal("N", None, coord, src=seam_cb["N"]["src"],
+                                           lo=float(round(coord + seam_cb["N"]["cell"]))))
+        for coord in (3425.500, 3699.500):
+            sig_by_side["S"].append(Signal("S", None, coord, src=seam_cb["S"]["src"],
+                                           lo=float(round(coord + seam_cb["S"]["cell"]))))
+        sig_by_side["N"].sort(key=lambda o: o.coord)
+        sig_by_side["S"].sort(key=lambda o: o.coord)
 
-    # Synthesize constant_block placement for the mid-seam pads (openframe has
-    # none there): same perpendicular + orientation as the side, along-edge
-    # position offset from the seam pad center like the openframe pads.
-    for s in "NS":
-        r = seam_cb[s]
-        for o in sig_by_side[s]:
-            if o.cb is None:
-                o.cb = dict(llx=o.coord + r["dalong"], lly=r["perp"],
-                            orient=r["orient"])
+        for s in "NS":
+            r = seam_cb[s]
+            for o in sig_by_side[s]:
+                if o.cb is None:
+                    o.cb = dict(llx=o.coord + r["dalong"], lly=r["perp"],
+                                orient=r["orient"])
 
     # Number from the lower-right corner, counterclockwise, matching
     # caravel openframe: GPIO 0 is the lowest pad on the east edge, then up

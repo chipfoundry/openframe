@@ -6,27 +6,27 @@
 // west ring gap; the xres4v2 reset pad is on the south edge (bond @
 // 700.447 um) with constant_block + xres_buf like openframe.
 //
-// 63 signal GPIOs total + resetb_pad.
+// 44 signal GPIOs total + resetb_pad.
 
 `default_nettype none
 
 module double_wide_chip_io (
-    inout [62:0] gpio_pad,
+    inout [43:0] gpio_pad,
     inout resetb_pad,
     inout [0:0] vccd_pad,
     inout [0:0] vccd1_pad,
     inout [0:0] vccd2_pad,
-    inout [1:0] vdda_pad,
+    inout [0:0] vdda_pad,
     inout [1:0] vdda1_pad,
     inout [0:0] vdda2_pad,
     inout [1:0] vddio_pad,
-    inout [1:0] vssa_pad,
-    inout [2:0] vssa1_pad,
+    inout [0:0] vssa_pad,
+    inout [1:0] vssa1_pad,
     inout [0:0] vssa2_pad,
-    inout [1:0] vssd_pad,
+    inout [0:0] vssd_pad,
     inout [0:0] vssd1_pad,
     inout [0:0] vssd2_pad,
-    inout [3:0] vssio_pad
+    inout [1:0] vssio_pad
 );
     // Internal analog / quiet-rail nets
     wire analog_a, analog_b, vddio_q, vssio_q;
@@ -36,29 +36,29 @@ module double_wide_chip_io (
     wire vddio, vssio, vccd, vssd, vdda, vssa, vdda1, vssa1, vccd1, vssd1, vdda2, vssa2, vccd2, vssd2;
 `endif
 
-    wire [62:0] gpio_out;
-    wire [62:0] gpio_oeb;
-    wire [62:0] gpio_inp_dis;
-    wire [62:0] gpio_ib_mode_sel;
-    wire [62:0] gpio_vtrip_sel;
-    wire [62:0] gpio_slow_sel;
-    wire [62:0] gpio_holdover;
-    wire [62:0] gpio_analog_en;
-    wire [62:0] gpio_analog_sel;
-    wire [62:0] gpio_analog_pol;
-    wire [62:0] gpio_dm0;
-    wire [62:0] gpio_dm1;
-    wire [62:0] gpio_dm2;
-    wire [62:0] gpio_in;
-    wire [62:0] gpio_in_h;
-    wire [62:0] analog_io;
-    wire [62:0] analog_noesd_io;
-    wire [62:0] gpio_loopback_one;
-    wire [62:0] gpio_loopback_zero;
+    wire [43:0] gpio_out;
+    wire [43:0] gpio_oeb;
+    wire [43:0] gpio_inp_dis;
+    wire [43:0] gpio_ib_mode_sel;
+    wire [43:0] gpio_vtrip_sel;
+    wire [43:0] gpio_slow_sel;
+    wire [43:0] gpio_holdover;
+    wire [43:0] gpio_analog_en;
+    wire [43:0] gpio_analog_sel;
+    wire [43:0] gpio_analog_pol;
+    wire [43:0] gpio_dm0;
+    wire [43:0] gpio_dm1;
+    wire [43:0] gpio_dm2;
+    wire [43:0] gpio_in;
+    wire [43:0] gpio_in_h;
+    wire [43:0] analog_io;
+    wire [43:0] analog_noesd_io;
+    wire [43:0] gpio_loopback_one;
+    wire [43:0] gpio_loopback_zero;
     wire [31:0] mask_rev;
-    // GPIO 0 pad controls. CF_owire_id drives bit 0. The east generate
-    // loop indexes a concatenation, not a genvar ternary: Verilator 5
-    // cannot unroll the ternary.
+    // GPIO 0 pad controls. CF_owire_id drives bit 0 of each *_pad bus.
+    // The generate loops only index those buses: a genvar inside a
+    // ternary cannot be unrolled by Verilator 5.
     wire gpio_out_owire;
     wire gpio_oeb_owire;
     wire gpio_inp_dis_owire;
@@ -72,21 +72,19 @@ module double_wide_chip_io (
     wire gpio_dm0_owire;
     wire gpio_dm1_owire;
     wire gpio_dm2_owire;
-
-    wire [62:0] gpio_out_pad = {gpio_out[62:1], gpio_out_owire};
-    wire [62:0] gpio_oeb_pad = {gpio_oeb[62:1], gpio_oeb_owire};
-    wire [62:0] gpio_inp_dis_pad = {gpio_inp_dis[62:1], gpio_inp_dis_owire};
-    wire [62:0] gpio_ib_mode_sel_pad = {gpio_ib_mode_sel[62:1], gpio_ib_mode_sel_owire};
-    wire [62:0] gpio_vtrip_sel_pad = {gpio_vtrip_sel[62:1], gpio_vtrip_sel_owire};
-    wire [62:0] gpio_slow_sel_pad = {gpio_slow_sel[62:1], gpio_slow_sel_owire};
-    wire [62:0] gpio_holdover_pad = {gpio_holdover[62:1], gpio_holdover_owire};
-    wire [62:0] gpio_analog_en_pad = {gpio_analog_en[62:1], gpio_analog_en_owire};
-    wire [62:0] gpio_analog_sel_pad = {gpio_analog_sel[62:1], gpio_analog_sel_owire};
-    wire [62:0] gpio_analog_pol_pad = {gpio_analog_pol[62:1], gpio_analog_pol_owire};
-    wire [62:0] gpio_dm0_pad = {gpio_dm0[62:1], gpio_dm0_owire};
-    wire [62:0] gpio_dm1_pad = {gpio_dm1[62:1], gpio_dm1_owire};
-    wire [62:0] gpio_dm2_pad = {gpio_dm2[62:1], gpio_dm2_owire};
-
+    wire [43:0] gpio_out_pad = {gpio_out[43:1], gpio_out_owire};
+    wire [43:0] gpio_oeb_pad = {gpio_oeb[43:1], gpio_oeb_owire};
+    wire [43:0] gpio_inp_dis_pad = {gpio_inp_dis[43:1], gpio_inp_dis_owire};
+    wire [43:0] gpio_ib_mode_sel_pad = {gpio_ib_mode_sel[43:1], gpio_ib_mode_sel_owire};
+    wire [43:0] gpio_vtrip_sel_pad = {gpio_vtrip_sel[43:1], gpio_vtrip_sel_owire};
+    wire [43:0] gpio_slow_sel_pad = {gpio_slow_sel[43:1], gpio_slow_sel_owire};
+    wire [43:0] gpio_holdover_pad = {gpio_holdover[43:1], gpio_holdover_owire};
+    wire [43:0] gpio_analog_en_pad = {gpio_analog_en[43:1], gpio_analog_en_owire};
+    wire [43:0] gpio_analog_sel_pad = {gpio_analog_sel[43:1], gpio_analog_sel_owire};
+    wire [43:0] gpio_analog_pol_pad = {gpio_analog_pol[43:1], gpio_analog_pol_owire};
+    wire [43:0] gpio_dm0_pad = {gpio_dm0[43:1], gpio_dm0_owire};
+    wire [43:0] gpio_dm1_pad = {gpio_dm1[43:1], gpio_dm1_owire};
+    wire [43:0] gpio_dm2_pad = {gpio_dm2[43:1], gpio_dm2_owire};
 
 
     // ---- power-on-reset (simple_por; fixed MACROS placement) ----
@@ -171,8 +169,8 @@ module double_wide_chip_io (
             .vccd(vccd),
             .vssd(vssd),
 `endif
-            .one(gpio_loopback_one[35 + i]),
-            .zero(gpio_loopback_zero[35 + i])
+            .one(gpio_loopback_one[24 + i]),
+            .zero(gpio_loopback_zero[24 + i])
         );
         sky130_ef_io__gpiov2_pad u (
         .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
@@ -182,10 +180,10 @@ module double_wide_chip_io (
         .VSSD(vssd), .VSSIO_Q(vssio_q),
 `endif
 `ifndef TOP_ROUTING
-            .PAD(gpio_pad[35 + i]),
+            .PAD(gpio_pad[24 + i]),
 `endif
-            .OUT(gpio_out[35 + i]),
-            .OE_N(gpio_oeb[35 + i]),
+            .OUT(gpio_out[24 + i]),
+            .OE_N(gpio_oeb[24 + i]),
             .HLD_H_N(tie_hi),
             // ENABLE_H/VDDA_H follow the power-on reset, exactly as in
             // chip_io_openframe.v: the pad is held in its safe state until
@@ -195,21 +193,21 @@ module double_wide_chip_io (
             .ENABLE_INP_H(tie_lo),
             .ENABLE_VDDA_H(porb_h),
             .ENABLE_VSWITCH_H(tie_lo),
-            .ENABLE_VDDIO(gpio_loopback_one[35 + i]),
-            .INP_DIS(gpio_inp_dis[35 + i]),
-            .IB_MODE_SEL(gpio_ib_mode_sel[35 + i]),
-            .VTRIP_SEL(gpio_vtrip_sel[35 + i]),
-            .SLOW(gpio_slow_sel[35 + i]),
-            .HLD_OVR(gpio_holdover[35 + i]),
-            .ANALOG_EN(gpio_analog_en[35 + i]),
-            .ANALOG_SEL(gpio_analog_sel[35 + i]),
-            .ANALOG_POL(gpio_analog_pol[35 + i]),
-            .DM({gpio_dm2[35 + i], gpio_dm1[35 + i], gpio_dm0[35 + i]}),
-            .PAD_A_NOESD_H(analog_noesd_io[35 + i]),
-            .PAD_A_ESD_0_H(analog_io[35 + i]),
+            .ENABLE_VDDIO(gpio_loopback_one[24 + i]),
+            .INP_DIS(gpio_inp_dis[24 + i]),
+            .IB_MODE_SEL(gpio_ib_mode_sel[24 + i]),
+            .VTRIP_SEL(gpio_vtrip_sel[24 + i]),
+            .SLOW(gpio_slow_sel[24 + i]),
+            .HLD_OVR(gpio_holdover[24 + i]),
+            .ANALOG_EN(gpio_analog_en[24 + i]),
+            .ANALOG_SEL(gpio_analog_sel[24 + i]),
+            .ANALOG_POL(gpio_analog_pol[24 + i]),
+            .DM({gpio_dm2[24 + i], gpio_dm1[24 + i], gpio_dm0[24 + i]}),
+            .PAD_A_NOESD_H(analog_noesd_io[24 + i]),
+            .PAD_A_ESD_0_H(analog_io[24 + i]),
             .PAD_A_ESD_1_H(),
-            .IN(gpio_in[35 + i]),
-            .IN_H(gpio_in_h[35 + i]),
+            .IN(gpio_in[24 + i]),
+            .IN_H(gpio_in_h[24 + i]),
             .TIE_HI_ESD(tie_hi),
             .TIE_LO_ESD(tie_lo)
         );
@@ -271,8 +269,8 @@ module double_wide_chip_io (
     end endgenerate
 
 
-    // ---- N side signal pads (15) : domain user1 ----
-    generate for (genvar i = 0; i < 15; ++i) begin : gpio_n
+    // ---- N side signal pads (4) : domain user1 ----
+    generate for (genvar i = 0; i < 4; ++i) begin : gpio_n
         wire tie_hi, tie_lo;
         // openframe per-pad constant one/zero (buffered 1.8V). `one` drives the
         // pad ENABLE_VDDIO; both are exported to the user wrapper for loopback.
@@ -336,8 +334,8 @@ module double_wide_chip_io (
             .vccd(vccd),
             .vssd(vssd),
 `endif
-            .one(gpio_loopback_one[30 + i]),
-            .zero(gpio_loopback_zero[30 + i])
+            .one(gpio_loopback_one[19 + i]),
+            .zero(gpio_loopback_zero[19 + i])
         );
         sky130_ef_io__gpiov2_pad u (
         .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
@@ -347,10 +345,10 @@ module double_wide_chip_io (
         .VSSD(vssd), .VSSIO_Q(vssio_q),
 `endif
 `ifndef TOP_ROUTING
-            .PAD(gpio_pad[30 + i]),
+            .PAD(gpio_pad[19 + i]),
 `endif
-            .OUT(gpio_out[30 + i]),
-            .OE_N(gpio_oeb[30 + i]),
+            .OUT(gpio_out[19 + i]),
+            .OE_N(gpio_oeb[19 + i]),
             .HLD_H_N(tie_hi),
             // ENABLE_H/VDDA_H follow the power-on reset, exactly as in
             // chip_io_openframe.v: the pad is held in its safe state until
@@ -360,29 +358,29 @@ module double_wide_chip_io (
             .ENABLE_INP_H(tie_lo),
             .ENABLE_VDDA_H(porb_h),
             .ENABLE_VSWITCH_H(tie_lo),
-            .ENABLE_VDDIO(gpio_loopback_one[30 + i]),
-            .INP_DIS(gpio_inp_dis[30 + i]),
-            .IB_MODE_SEL(gpio_ib_mode_sel[30 + i]),
-            .VTRIP_SEL(gpio_vtrip_sel[30 + i]),
-            .SLOW(gpio_slow_sel[30 + i]),
-            .HLD_OVR(gpio_holdover[30 + i]),
-            .ANALOG_EN(gpio_analog_en[30 + i]),
-            .ANALOG_SEL(gpio_analog_sel[30 + i]),
-            .ANALOG_POL(gpio_analog_pol[30 + i]),
-            .DM({gpio_dm2[30 + i], gpio_dm1[30 + i], gpio_dm0[30 + i]}),
-            .PAD_A_NOESD_H(analog_noesd_io[30 + i]),
-            .PAD_A_ESD_0_H(analog_io[30 + i]),
+            .ENABLE_VDDIO(gpio_loopback_one[19 + i]),
+            .INP_DIS(gpio_inp_dis[19 + i]),
+            .IB_MODE_SEL(gpio_ib_mode_sel[19 + i]),
+            .VTRIP_SEL(gpio_vtrip_sel[19 + i]),
+            .SLOW(gpio_slow_sel[19 + i]),
+            .HLD_OVR(gpio_holdover[19 + i]),
+            .ANALOG_EN(gpio_analog_en[19 + i]),
+            .ANALOG_SEL(gpio_analog_sel[19 + i]),
+            .ANALOG_POL(gpio_analog_pol[19 + i]),
+            .DM({gpio_dm2[19 + i], gpio_dm1[19 + i], gpio_dm0[19 + i]}),
+            .PAD_A_NOESD_H(analog_noesd_io[19 + i]),
+            .PAD_A_ESD_0_H(analog_io[19 + i]),
             .PAD_A_ESD_1_H(),
-            .IN(gpio_in[30 + i]),
-            .IN_H(gpio_in_h[30 + i]),
+            .IN(gpio_in[19 + i]),
+            .IN_H(gpio_in_h[19 + i]),
             .TIE_HI_ESD(tie_hi),
             .TIE_LO_ESD(tie_lo)
         );
     end endgenerate
 
 
-    // ---- S side signal pads (14) : domain user0 ----
-    generate for (genvar i = 0; i < 14; ++i) begin : gpio_s
+    // ---- S side signal pads (6) : domain user0 ----
+    generate for (genvar i = 0; i < 6; ++i) begin : gpio_s
         wire tie_hi, tie_lo;
         // openframe per-pad constant one/zero (buffered 1.8V). `one` drives the
         // pad ENABLE_VDDIO; both are exported to the user wrapper for loopback.
@@ -391,8 +389,8 @@ module double_wide_chip_io (
             .vccd(vccd),
             .vssd(vssd),
 `endif
-            .one(gpio_loopback_one[49 + i]),
-            .zero(gpio_loopback_zero[49 + i])
+            .one(gpio_loopback_one[38 + i]),
+            .zero(gpio_loopback_zero[38 + i])
         );
         sky130_ef_io__gpiov2_pad u (
         .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
@@ -402,10 +400,10 @@ module double_wide_chip_io (
         .VSSD(vssd), .VSSIO_Q(vssio_q),
 `endif
 `ifndef TOP_ROUTING
-            .PAD(gpio_pad[49 + i]),
+            .PAD(gpio_pad[38 + i]),
 `endif
-            .OUT(gpio_out[49 + i]),
-            .OE_N(gpio_oeb[49 + i]),
+            .OUT(gpio_out[38 + i]),
+            .OE_N(gpio_oeb[38 + i]),
             .HLD_H_N(tie_hi),
             // ENABLE_H/VDDA_H follow the power-on reset, exactly as in
             // chip_io_openframe.v: the pad is held in its safe state until
@@ -415,21 +413,21 @@ module double_wide_chip_io (
             .ENABLE_INP_H(tie_lo),
             .ENABLE_VDDA_H(porb_h),
             .ENABLE_VSWITCH_H(tie_lo),
-            .ENABLE_VDDIO(gpio_loopback_one[49 + i]),
-            .INP_DIS(gpio_inp_dis[49 + i]),
-            .IB_MODE_SEL(gpio_ib_mode_sel[49 + i]),
-            .VTRIP_SEL(gpio_vtrip_sel[49 + i]),
-            .SLOW(gpio_slow_sel[49 + i]),
-            .HLD_OVR(gpio_holdover[49 + i]),
-            .ANALOG_EN(gpio_analog_en[49 + i]),
-            .ANALOG_SEL(gpio_analog_sel[49 + i]),
-            .ANALOG_POL(gpio_analog_pol[49 + i]),
-            .DM({gpio_dm2[49 + i], gpio_dm1[49 + i], gpio_dm0[49 + i]}),
-            .PAD_A_NOESD_H(analog_noesd_io[49 + i]),
-            .PAD_A_ESD_0_H(analog_io[49 + i]),
+            .ENABLE_VDDIO(gpio_loopback_one[38 + i]),
+            .INP_DIS(gpio_inp_dis[38 + i]),
+            .IB_MODE_SEL(gpio_ib_mode_sel[38 + i]),
+            .VTRIP_SEL(gpio_vtrip_sel[38 + i]),
+            .SLOW(gpio_slow_sel[38 + i]),
+            .HLD_OVR(gpio_holdover[38 + i]),
+            .ANALOG_EN(gpio_analog_en[38 + i]),
+            .ANALOG_SEL(gpio_analog_sel[38 + i]),
+            .ANALOG_POL(gpio_analog_pol[38 + i]),
+            .DM({gpio_dm2[38 + i], gpio_dm1[38 + i], gpio_dm0[38 + i]}),
+            .PAD_A_NOESD_H(analog_noesd_io[38 + i]),
+            .PAD_A_ESD_0_H(analog_io[38 + i]),
             .PAD_A_ESD_1_H(),
-            .IN(gpio_in[49 + i]),
-            .IN_H(gpio_in_h[49 + i]),
+            .IN(gpio_in[38 + i]),
+            .IN_H(gpio_in_h[38 + i]),
             .TIE_HI_ESD(tie_hi),
             .TIE_LO_ESD(tie_lo)
         );
@@ -631,32 +629,6 @@ module double_wide_chip_io (
     );
 
 
-    sky130_ef_io__vssio_hvc_clamped_pad clamp_vssio_1 (
-        .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
-`ifdef USE_POWER_PINS
-        .VSSA(vssa1), .VDDA(vdda1), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
-        .VCCHIB(vccd), .VDDIO(vddio), .VCCD(vccd), .VSSIO(vssio),
-        .VSSD(vssd), .VSSIO_Q(vssio_q),
-`endif
-`ifndef TOP_ROUTING
-        .VSSIO_PAD(vssio_pad[1])
-`endif
-    );
-
-
-    sky130_ef_io__vssa_hvc_clamped_pad clamp_vssa1_2 (
-        .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
-`ifdef USE_POWER_PINS
-        .VSSA(vssa1), .VDDA(vdda1), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
-        .VCCHIB(vccd), .VDDIO(vddio), .VCCD(vccd), .VSSIO(vssio),
-        .VSSD(vssd), .VSSIO_Q(vssio_q),
-`endif
-`ifndef TOP_ROUTING
-        .VSSA_PAD(vssa1_pad[2])
-`endif
-    );
-
-
     sky130_ef_io__vssa_hvc_clamped_pad clamp_vssa_0 (
         .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
 `ifdef USE_POWER_PINS
@@ -683,7 +655,7 @@ module double_wide_chip_io (
     );
 
 
-    sky130_ef_io__vssio_hvc_clamped_pad clamp_vssio_2 (
+    sky130_ef_io__vssio_hvc_clamped_pad clamp_vssio_1 (
         .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
 `ifdef USE_POWER_PINS
         .VSSA(vssa), .VDDA(vdda), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
@@ -691,7 +663,7 @@ module double_wide_chip_io (
         .VSSD(vssd), .VSSIO_Q(vssio_q),
 `endif
 `ifndef TOP_ROUTING
-        .VSSIO_PAD(vssio_pad[2])
+        .VSSIO_PAD(vssio_pad[1])
 `endif
     );
 
@@ -705,58 +677,6 @@ module double_wide_chip_io (
 `endif
 `ifndef TOP_ROUTING
         .VDDA_PAD(vdda_pad[0])
-`endif
-    );
-
-
-    sky130_ef_io__vssa_hvc_clamped_pad clamp_vssa_1 (
-        .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
-`ifdef USE_POWER_PINS
-        .VSSA(vssa), .VDDA(vdda), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
-        .VCCHIB(vccd), .VDDIO(vddio), .VCCD(vccd), .VSSIO(vssio),
-        .VSSD(vssd), .VSSIO_Q(vssio_q),
-`endif
-`ifndef TOP_ROUTING
-        .VSSA_PAD(vssa_pad[1])
-`endif
-    );
-
-
-    sky130_ef_io__vssd_lvc_clamped_pad clamp_vssd_1 (
-        .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
-`ifdef USE_POWER_PINS
-        .VSSA(vssa), .VDDA(vdda), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
-        .VCCHIB(vccd), .VDDIO(vddio), .VCCD(vccd), .VSSIO(vssio),
-        .VSSD(vssd), .VSSIO_Q(vssio_q),
-`endif
-`ifndef TOP_ROUTING
-        .VSSD_PAD(vssd_pad[1])
-`endif
-    );
-
-
-    sky130_ef_io__vssio_hvc_clamped_pad clamp_vssio_3 (
-        .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
-`ifdef USE_POWER_PINS
-        .VSSA(vssa), .VDDA(vdda), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
-        .VCCHIB(vccd), .VDDIO(vddio), .VCCD(vccd), .VSSIO(vssio),
-        .VSSD(vssd), .VSSIO_Q(vssio_q),
-`endif
-`ifndef TOP_ROUTING
-        .VSSIO_PAD(vssio_pad[3])
-`endif
-    );
-
-
-    sky130_ef_io__vdda_hvc_clamped_pad clamp_vdda_1 (
-        .AMUXBUS_A(analog_a), .AMUXBUS_B(analog_b),
-`ifdef USE_POWER_PINS
-        .VSSA(vssa), .VDDA(vdda), .VSWITCH(vddio), .VDDIO_Q(vddio_q),
-        .VCCHIB(vccd), .VDDIO(vddio), .VCCD(vccd), .VSSIO(vssio),
-        .VSSD(vssd), .VSSIO_Q(vssio_q),
-`endif
-`ifndef TOP_ROUTING
-        .VDDA_PAD(vdda_pad[1])
 `endif
     );
 

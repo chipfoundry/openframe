@@ -19,41 +19,41 @@ module double_wide_openframe_project_wrapper (
     input  resetb_h,
     input  resetb_l,
     input  [31:0] mask_rev,
-    input  [62:0] gpio_in,
-    input  [62:0] gpio_in_h,
-    input  [62:0] gpio_loopback_one,
-    input  [62:0] gpio_loopback_zero,
-    output [62:0] gpio_out,
-    output [62:0] gpio_oeb,
-    output [62:0] gpio_inp_dis,
-    output [62:0] gpio_ib_mode_sel,
-    output [62:0] gpio_vtrip_sel,
-    output [62:0] gpio_slow_sel,
-    output [62:0] gpio_holdover,
-    output [62:0] gpio_analog_en,
-    output [62:0] gpio_analog_sel,
-    output [62:0] gpio_analog_pol,
-    output [62:0] gpio_dm0,
-    output [62:0] gpio_dm1,
-    output [62:0] gpio_dm2,
-    inout  [62:0] analog_io,
-    inout  [62:0] analog_noesd_io
+    input  [43:0] gpio_in,
+    input  [43:0] gpio_in_h,
+    input  [43:0] gpio_loopback_one,
+    input  [43:0] gpio_loopback_zero,
+    output [43:0] gpio_out,
+    output [43:0] gpio_oeb,
+    output [43:0] gpio_inp_dis,
+    output [43:0] gpio_ib_mode_sel,
+    output [43:0] gpio_vtrip_sel,
+    output [43:0] gpio_slow_sel,
+    output [43:0] gpio_holdover,
+    output [43:0] gpio_analog_en,
+    output [43:0] gpio_analog_sel,
+    output [43:0] gpio_analog_pol,
+    output [43:0] gpio_dm0,
+    output [43:0] gpio_dm1,
+    output [43:0] gpio_dm2,
+    inout  [43:0] analog_io,
+    inout  [43:0] analog_noesd_io
 );
 
     // Empty template: drive all pads to a safe high-impedance input state.
-    assign gpio_out       = 63'b0;
-    assign gpio_oeb       = {63{1'b1}};   // output disabled
-    assign gpio_inp_dis   = 63'b0;
-    assign gpio_ib_mode_sel = 63'b0;
-    assign gpio_vtrip_sel = 63'b0;
-    assign gpio_slow_sel  = 63'b0;
-    assign gpio_holdover  = 63'b0;
-    assign gpio_analog_en = 63'b0;
-    assign gpio_analog_sel = 63'b0;
-    assign gpio_analog_pol = 63'b0;
-    assign gpio_dm0       = {63{1'b1}};
-    assign gpio_dm1       = 63'b0;
-    assign gpio_dm2       = 63'b0;
+    assign gpio_out       = 44'b0;
+    assign gpio_oeb       = {44{1'b1}};   // output disabled
+    assign gpio_inp_dis   = 44'b0;
+    assign gpio_ib_mode_sel = 44'b0;
+    assign gpio_vtrip_sel = 44'b0;
+    assign gpio_slow_sel  = 44'b0;
+    assign gpio_holdover  = 44'b0;
+    assign gpio_analog_en = 44'b0;
+    assign gpio_analog_sel = 44'b0;
+    assign gpio_analog_pol = 44'b0;
+    assign gpio_dm0       = {44{1'b1}};
+    assign gpio_dm1       = 44'b0;
+    assign gpio_dm2       = 44'b0;
 
 endmodule
 

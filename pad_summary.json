@@ -1,7 +1,7 @@
 {
-  "n_gpio": 63,
+  "n_gpio": 44,
   "die_um": [
-    7176.0,
+    3588.0,
     5188.0
   ],
   "counts_per_side": {
@@ -14,12 +14,12 @@
       "clamp": 5
     },
     "N": {
-      "gpio": 20,
-      "clamp": 4
+      "gpio": 9,
+      "clamp": 2
     },
     "S": {
-      "gpio": 14,
-      "clamp": 8
+      "gpio": 6,
+      "clamp": 4
     }
   },
   "pkg_counts": {
@@ -29,14 +29,14 @@
     "vdda2": 1,
     "vssa2": 1,
     "vccd2": 1,
-    "vssa1": 3,
+    "vssa1": 2,
     "vssd1": 1,
     "vdda1": 2,
     "vccd1": 1,
-    "vssio": 4,
-    "vssa": 2,
-    "vssd": 2,
-    "vdda": 2
+    "vssio": 2,
+    "vssa": 1,
+    "vssd": 1,
+    "vdda": 1
   },
   "gpio_index_map": [
     {
@@ -148,337 +148,204 @@
       "g": 15,
       "side": "N",
       "domain": "user1",
-      "coord": 6760.5,
+      "coord": 3172.5,
       "inst": "gpio_n[0].u"
     },
     {
       "g": 16,
       "side": "N",
       "domain": "user1",
-      "coord": 6251.5,
+      "coord": 2663.5,
       "inst": "gpio_n[1].u"
     },
     {
       "g": 17,
       "side": "N",
       "domain": "user1",
-      "coord": 5994.5,
+      "coord": 2406.5,
       "inst": "gpio_n[2].u"
     },
     {
       "g": 18,
       "side": "N",
       "domain": "user1",
-      "coord": 5549.5,
+      "coord": 1961.5,
       "inst": "gpio_n[3].u"
     },
     {
       "g": 19,
-      "side": "N",
-      "domain": "user1",
-      "coord": 5040.5,
-      "inst": "gpio_n[4].u"
-    },
-    {
-      "g": 20,
-      "side": "N",
-      "domain": "user1",
-      "coord": 4782.5,
-      "inst": "gpio_n[5].u"
-    },
-    {
-      "g": 21,
-      "side": "N",
-      "domain": "user1",
-      "coord": 4525.5,
-      "inst": "gpio_n[6].u"
-    },
-    {
-      "g": 22,
-      "side": "N",
-      "domain": "user1",
-      "coord": 4268.5,
-      "inst": "gpio_n[7].u"
-    },
-    {
-      "g": 23,
-      "side": "N",
-      "domain": "user1",
-      "coord": 4011.5,
-      "inst": "gpio_n[8].u"
-    },
-    {
-      "g": 24,
-      "side": "N",
-      "domain": "user1",
-      "coord": 3686.5,
-      "inst": "gpio_n[9].u"
-    },
-    {
-      "g": 25,
-      "side": "N",
-      "domain": "user1",
-      "coord": 3429.5,
-      "inst": "gpio_n[10].u"
-    },
-    {
-      "g": 26,
-      "side": "N",
-      "domain": "user1",
-      "coord": 3172.5,
-      "inst": "gpio_n[11].u"
-    },
-    {
-      "g": 27,
-      "side": "N",
-      "domain": "user1",
-      "coord": 2663.5,
-      "inst": "gpio_n[12].u"
-    },
-    {
-      "g": 28,
-      "side": "N",
-      "domain": "user1",
-      "coord": 2406.5,
-      "inst": "gpio_n[13].u"
-    },
-    {
-      "g": 29,
-      "side": "N",
-      "domain": "user1",
-      "coord": 1961.5,
-      "inst": "gpio_n[14].u"
-    },
-    {
-      "g": 30,
       "side": "N",
       "domain": "user2",
       "coord": 1452.5,
       "inst": "gpio_n_user2[0].u"
     },
     {
-      "g": 31,
+      "g": 20,
       "side": "N",
       "domain": "user2",
       "coord": 1194.5,
       "inst": "gpio_n_user2[1].u"
     },
     {
-      "g": 32,
+      "g": 21,
       "side": "N",
       "domain": "user2",
       "coord": 937.5,
       "inst": "gpio_n_user2[2].u"
     },
     {
-      "g": 33,
+      "g": 22,
       "side": "N",
       "domain": "user2",
       "coord": 680.5,
       "inst": "gpio_n_user2[3].u"
     },
     {
-      "g": 34,
+      "g": 23,
       "side": "N",
       "domain": "user2",
       "coord": 423.5,
       "inst": "gpio_n_user2[4].u"
     },
     {
-      "g": 35,
+      "g": 24,
       "side": "W",
       "domain": "user2",
       "coord": 4813.5,
       "inst": "gpio_w[0].u"
     },
     {
-      "g": 36,
+      "g": 25,
       "side": "W",
       "domain": "user2",
       "coord": 3964.5,
       "inst": "gpio_w[1].u"
     },
     {
-      "g": 37,
+      "g": 26,
       "side": "W",
       "domain": "user2",
       "coord": 3748.5,
       "inst": "gpio_w[2].u"
     },
     {
-      "g": 38,
+      "g": 27,
       "side": "W",
       "domain": "user2",
       "coord": 3532.5,
       "inst": "gpio_w[3].u"
     },
     {
-      "g": 39,
+      "g": 28,
       "side": "W",
       "domain": "user2",
       "coord": 3316.5,
       "inst": "gpio_w[4].u"
     },
     {
-      "g": 40,
+      "g": 29,
       "side": "W",
       "domain": "user2",
       "coord": 3100.5,
       "inst": "gpio_w[5].u"
     },
     {
-      "g": 41,
+      "g": 30,
       "side": "W",
       "domain": "user2",
       "coord": 2884.5,
       "inst": "gpio_w[6].u"
     },
     {
-      "g": 42,
+      "g": 31,
       "side": "W",
       "domain": "user2",
       "coord": 2668.5,
       "inst": "gpio_w[7].u"
     },
     {
-      "g": 43,
+      "g": 32,
       "side": "W",
       "domain": "user2",
       "coord": 2030.5,
       "inst": "gpio_w[8].u"
     },
     {
-      "g": 44,
+      "g": 33,
       "side": "W",
       "domain": "user2",
       "coord": 1814.5,
       "inst": "gpio_w[9].u"
     },
     {
-      "g": 45,
+      "g": 34,
       "side": "W",
       "domain": "user2",
       "coord": 1598.5,
       "inst": "gpio_w[10].u"
     },
     {
-      "g": 46,
+      "g": 35,
       "side": "W",
       "domain": "user2",
       "coord": 1382.5,
       "inst": "gpio_w[11].u"
     },
     {
-      "g": 47,
+      "g": 36,
       "side": "W",
       "domain": "user2",
       "coord": 1166.5,
       "inst": "gpio_w[12].u"
     },
     {
-      "g": 48,
+      "g": 37,
       "side": "W",
       "domain": "user2",
       "coord": 950.5,
       "inst": "gpio_w[13].u"
     },
     {
-      "g": 49,
+      "g": 38,
       "side": "S",
       "domain": "user0",
       "coord": 969.5,
       "inst": "gpio_s[0].u"
     },
     {
-      "g": 50,
+      "g": 39,
       "side": "S",
       "domain": "user0",
       "coord": 1512.5,
       "inst": "gpio_s[1].u"
     },
     {
-      "g": 51,
+      "g": 40,
       "side": "S",
       "domain": "user0",
       "coord": 1786.5,
       "inst": "gpio_s[2].u"
     },
     {
-      "g": 52,
+      "g": 41,
       "side": "S",
       "domain": "user0",
       "coord": 2060.5,
       "inst": "gpio_s[3].u"
     },
     {
-      "g": 53,
+      "g": 42,
       "side": "S",
       "domain": "user0",
       "coord": 2334.5,
       "inst": "gpio_s[4].u"
     },
     {
-      "g": 54,
+      "g": 43,
       "side": "S",
       "domain": "user0",
       "coord": 2608.5,
       "inst": "gpio_s[5].u"
-    },
-    {
-      "g": 55,
-      "side": "S",
-      "domain": "user0",
-      "coord": 3422.5,
-      "inst": "gpio_s[6].u"
-    },
-    {
-      "g": 56,
-      "side": "S",
-      "domain": "user0",
-      "coord": 3696.5,
-      "inst": "gpio_s[7].u"
-    },
-    {
-      "g": 57,
-      "side": "S",
-      "domain": "user0",
-      "coord": 4557.5,
-      "inst": "gpio_s[8].u"
-    },
-    {
-      "g": 58,
-      "side": "S",
-      "domain": "user0",
-      "coord": 5100.5,
-      "inst": "gpio_s[9].u"
-    },
-    {
-      "g": 59,
-      "side": "S",
-      "domain": "user0",
-      "coord": 5374.5,
-      "inst": "gpio_s[10].u"
-    },
-    {
-      "g": 60,
-      "side": "S",
-      "domain": "user0",
-      "coord": 5648.5,
-      "inst": "gpio_s[11].u"
-    },
-    {
-      "g": 61,
-      "side": "S",
-      "domain": "user0",
-      "coord": 5922.5,
-      "inst": "gpio_s[12].u"
-    },
-    {
-      "g": 62,
-      "side": "S",
-      "domain": "user0",
-      "coord": 6196.5,
-      "inst": "gpio_s[13].u"
     }
   ],
   "reset": {
